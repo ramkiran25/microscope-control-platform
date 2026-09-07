@@ -206,7 +206,7 @@ Verify it's up at `http://127.0.0.1:8000/docs`.
 
 ```bash
 cd control-service
-mvnw spring-boot:run
+mvn spring-boot:run
 ```
 
 **3. Try it out:**
