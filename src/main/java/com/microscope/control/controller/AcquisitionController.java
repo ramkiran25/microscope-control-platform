@@ -24,60 +24,68 @@ import java.util.List;
 @RequestMapping("/acquisition")
 public class AcquisitionController {
 
-  private final StageDriver stageDriver;
-  private final CameraDriver cameraDriver;
-  private final StateMachine stateMachine;
-  private final ContinuousRunService continuousRunService;
+    private final StageDriver stageDriver;
+    private final CameraDriver cameraDriver;
+    private final StateMachine stateMachine;
+    private final ContinuousRunService continuousRunService;
 
-  public AcquisitionController(StageDriver stageDriver, CameraDriver cameraDriver,
-      StateMachine stateMachine, ContinuousRunService continuousRunService) {
-    this.stageDriver = stageDriver;
-    this.cameraDriver = cameraDriver;
-    this.stateMachine = stateMachine;
-    this.continuousRunService = continuousRunService;
-  }
-
-  @PostMapping("/z-stack")
-  public ResponseEntity<String> runZStack() {
-    List<Command> sequence = new AcquisitionSequenceBuilder(stageDriver, cameraDriver)
-        .zStack(0, 0, /* startZ */ 0, /* stepZ */ 5, /* steps */ 4, /* exposureMs */ 200).build();
-
-    try {
-      for (Command command : sequence) {
-        InstrumentState next =
-            (command instanceof MoveCommand) ? InstrumentState.MOVING : InstrumentState.CAPTURING;
-        stateMachine.transitionTo(next);
-
-        command.execute(); // may throw DriverCommunicationException
-
-        stateMachine.transitionTo(InstrumentState.IDLE);
-      }
-    } catch (DriverCommunicationException e) {
-      stateMachine.fault();
-      return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-          .body("Sequence aborted: " + e.getMessage());
-    } catch (IllegalStateTransitionException e) {
-      return ResponseEntity.status(HttpStatus.CONFLICT).body("Rejected: " + e.getMessage());
+    public AcquisitionController(StageDriver stageDriver, CameraDriver cameraDriver,
+                                  StateMachine stateMachine, ContinuousRunService continuousRunService) {
+        this.stageDriver = stageDriver;
+        this.cameraDriver = cameraDriver;
+        this.stateMachine = stateMachine;
+        this.continuousRunService = continuousRunService;
     }
 
-    return ResponseEntity.ok("Sequence complete: " + sequence.size() + " steps");
-  }
+    @PostMapping("/z-stack")
+    public ResponseEntity<String> runZStack() {
+        if (continuousRunService.isRunning()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Rejected: continuous demo run is active — stop it first");
+        }
 
-  @PostMapping("/reset")
-  public ResponseEntity<String> reset() {
-    stateMachine.reset();
-    return ResponseEntity.ok("Instrument reset to IDLE");
-  }
+        List<Command> sequence = new AcquisitionSequenceBuilder(stageDriver, cameraDriver)
+                .zStack(0, 0, /*startZ*/ 0, /*stepZ*/ 5, /*steps*/ 4, /*exposureMs*/ 200)
+                .build();
 
-  @PostMapping("/continuous/start")
-  public ResponseEntity<String> startContinuous() {
-    continuousRunService.start();
-    return ResponseEntity.ok("Continuous demo run started");
-  }
+        try {
+            for (Command command : sequence) {
+                InstrumentState next = (command instanceof MoveCommand)
+                        ? InstrumentState.MOVING
+                        : InstrumentState.CAPTURING;
+                stateMachine.transitionTo(next);
 
-  @PostMapping("/continuous/stop")
-  public ResponseEntity<String> stopContinuous() {
-    continuousRunService.stop();
-    return ResponseEntity.ok("Continuous demo run stopped");
-  }
+                command.execute(); // may throw DriverCommunicationException
+
+                stateMachine.transitionTo(InstrumentState.IDLE);
+            }
+        } catch (DriverCommunicationException e) {
+            stateMachine.fault();
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body("Sequence aborted: " + e.getMessage());
+        } catch (IllegalStateTransitionException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Rejected: " + e.getMessage());
+        }
+
+        return ResponseEntity.ok("Sequence complete: " + sequence.size() + " steps");
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity<String> reset() {
+        stateMachine.reset();
+        return ResponseEntity.ok("Instrument reset to IDLE");
+    }
+
+    @PostMapping("/continuous/start")
+    public ResponseEntity<String> startContinuous() {
+        continuousRunService.start();
+        return ResponseEntity.ok("Continuous demo run started");
+    }
+
+    @PostMapping("/continuous/stop")
+    public ResponseEntity<String> stopContinuous() {
+        continuousRunService.stop();
+        return ResponseEntity.ok("Continuous demo run stopped");
+    }
 }

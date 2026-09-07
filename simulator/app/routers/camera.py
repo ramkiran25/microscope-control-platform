@@ -17,7 +17,7 @@ def capture(request: CaptureRequest) -> CameraStatus:
     simulator_state.set_camera_state(CameraState.EXPOSING)
 
     try:
-        simulate_capture(request.exposureMs)
+        simulate_capture(request.exposureMs) # type: ignore
     except CameraFaultError as e:
         simulator_state.set_camera_state(CameraState.FAULT)
         raise HTTPException(status_code=503, detail=str(e))

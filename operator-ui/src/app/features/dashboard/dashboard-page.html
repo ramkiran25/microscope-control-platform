@@ -68,18 +68,24 @@
         <div class="card">
             <h2>Acquisition Control</h2>
 
-            <button class="btn-primary" (click)="runZStack()"
-                [disabled]="isRunning">
-                {{ isRunning ? 'Running…' : 'Run Z-Stack' }}
-            </button>
+            <div class="button-group">
+                <button class="btn-primary" (click)="runZStack()"
+                    [disabled]="isRunning || isContinuousRunning">
+                    {{ isRunning ? 'Running…' : 'Run Z-Stack' }}
+                </button>
 
-            <button class="btn-secondary" (click)="toggleContinuous()">
-                {{ isContinuousRunning ? 'Stop Live Demo' : 'Start Live Demo' }}
-            </button>
+                <div class="secondary-actions">
+                    <button class="btn-secondary" (click)="toggleContinuous()"
+                        [disabled]="isRunning">
+                        {{ isContinuousRunning ? 'Stop Live Demo' :
+                        'Start Live Demo' }}
+                    </button>
 
-            <button class="btn-secondary" (click)="resetInstrument()">
-                Reset
-            </button>
+                    <button class="btn-secondary" (click)="resetInstrument()">
+                        Reset
+                    </button>
+                </div>
+            </div>
 
             <table class="data-table result-table">
                 <tbody>

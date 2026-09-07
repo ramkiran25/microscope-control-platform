@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import { TelemetryService } from '../../core/services/TelemetryService';
-import { AcquisitionService } from '../../core/services/Aquistion.Service';
+import { TelemetryService } from '../../core/service/TelemetryService';
+import { AcquisitionService } from '../../core/service/Aquistion.Service';
 import { TelemetryUpdate } from '../../core/models/models';
 
 @Component({
