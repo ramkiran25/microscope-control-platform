@@ -158,15 +158,6 @@ commands on its own after a fault, by design.
   client — verified showing real-time `IDLE → MOVING → CAPTURING → IDLE`
   transitions during an actual running sequence.
 
-## What's not built yet
-
-- ⬜ Angular UI — currently verified via Swagger UI and `wscat`, no
-  visual front-end yet.
-- ⬜ Persisted acquisition metadata/history (currently in-memory only).
-- ⬜ Additional acquisition strategies beyond a basic z-stack.
-
-## API reference
-
 ### Simulator (`simulator/`, default port 8000)
 
 | Method | Path | Purpose |
