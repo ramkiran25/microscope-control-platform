@@ -10,12 +10,11 @@ The project deliberately mirrors a real microscopy acquisition workflow
 layer instead of physical instruments, so the full software stack can be
 built, tested, and demonstrated without lab equipment.
 
-## 📸 Dashboard Preview
+## Dashboard Preview
 
 <div align="center">
   <img src="assets/microscope-image.png" style="max-width:100%; height:auto;" alt="Architecture Diagram" />
  </div>
-
 
 ## Architecture
 
