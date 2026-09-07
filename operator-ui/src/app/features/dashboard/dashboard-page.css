@@ -250,3 +250,151 @@
     color: #e2e8f0;
     border-color: #94a3b8;
 }
+
+/* =========================================================
+   FINAL ALIGNMENT FIX
+   ========================================================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.card {
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------
+   Card headers
+   --------------------------------------------------------- */
+
+.card-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 32px;
+    margin-bottom: 1.25rem;
+}
+
+.card-header-row h2 {
+    margin: 0;
+}
+
+/* ---------------------------------------------------------
+   Tables
+   --------------------------------------------------------- */
+
+.data-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.data-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #334155;
+    font-size: 0.9rem;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+.data-table tr {
+    height: 54px;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #24324a;
+}
+
+/* Fixed label/value columns */
+.data-table .metric-label {
+    width: 45%;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.data-table .metric-value {
+    width: 55%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* ---------------------------------------------------------
+   IMPORTANT:
+   Make all instrument status chips the same width.
+   This keeps them visually aligned when values change.
+   --------------------------------------------------------- */
+
+.data-table .metric-value>.chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 105px;
+    min-width: 105px;
+    height: 32px;
+
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+/* ---------------------------------------------------------
+   Instrument state chip in the header
+   --------------------------------------------------------- */
+
+.card-header-row>.chip {
+    width: 70px;
+    min-width: 70px;
+    height: 32px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------
+   Result table
+   --------------------------------------------------------- */
+
+.result-table {
+    margin-top: 1.25rem;
+}
+
+/* Don't allow long messages to change column width */
+.result-table .metric-value {
+    overflow: hidden;
+}
+
+.result-table .metric-value>.chip {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------------------------------------------------------
+   Buttons
+   --------------------------------------------------------- */
+
+.btn-primary,
+.btn-secondary {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
+
+@media (max-width: 800px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
