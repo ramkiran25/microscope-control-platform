@@ -6,11 +6,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-/**
- * Registers /ws/telemetry as the endpoint Angular connects to. 
- * This is a DIFFERENT WebSocket from the simulator's — that one
- * (ws://localhost:8000/ws/telemetry) is Java's inbound connection to
- */
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {

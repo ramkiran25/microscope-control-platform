@@ -7,16 +7,19 @@ import com.microscope.control.driver.CameraDriver;
 import com.microscope.control.driver.StageDriver;
 import com.microscope.control.exception.DriverCommunicationException;
 import com.microscope.control.exception.IllegalStateTransitionException;
+import com.microscope.control.facade.ContinuousRunService;
 import com.microscope.control.state.InstrumentState;
 import com.microscope.control.state.StateMachine;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/acquisition")
 public class AcquisitionController {
@@ -24,18 +27,14 @@ public class AcquisitionController {
   private final StageDriver stageDriver;
   private final CameraDriver cameraDriver;
   private final StateMachine stateMachine;
+  private final ContinuousRunService continuousRunService;
 
   public AcquisitionController(StageDriver stageDriver, CameraDriver cameraDriver,
-      StateMachine stateMachine) {
+      StateMachine stateMachine, ContinuousRunService continuousRunService) {
     this.stageDriver = stageDriver;
     this.cameraDriver = cameraDriver;
     this.stateMachine = stateMachine;
-  }
-
-  @PostMapping("/reset")
-  public ResponseEntity<String> reset() {
-    stateMachine.reset();
-    return ResponseEntity.ok("Instrument reset to IDLE");
+    this.continuousRunService = continuousRunService;
   }
 
   @PostMapping("/z-stack")
@@ -45,8 +44,6 @@ public class AcquisitionController {
 
     try {
       for (Command command : sequence) {
-        // Guard the transition BEFORE touching hardware — an illegal
-        // request never reaches the driver at all.
         InstrumentState next =
             (command instanceof MoveCommand) ? InstrumentState.MOVING : InstrumentState.CAPTURING;
         stateMachine.transitionTo(next);
@@ -64,5 +61,23 @@ public class AcquisitionController {
     }
 
     return ResponseEntity.ok("Sequence complete: " + sequence.size() + " steps");
+  }
+
+  @PostMapping("/reset")
+  public ResponseEntity<String> reset() {
+    stateMachine.reset();
+    return ResponseEntity.ok("Instrument reset to IDLE");
+  }
+
+  @PostMapping("/continuous/start")
+  public ResponseEntity<String> startContinuous() {
+    continuousRunService.start();
+    return ResponseEntity.ok("Continuous demo run started");
+  }
+
+  @PostMapping("/continuous/stop")
+  public ResponseEntity<String> stopContinuous() {
+    continuousRunService.stop();
+    return ResponseEntity.ok("Continuous demo run stopped");
   }
 }

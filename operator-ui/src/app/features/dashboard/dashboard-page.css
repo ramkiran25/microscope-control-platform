@@ -1,0 +1,252 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background-color: #0b0f19;
+    color: #f1f5f9;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+.heartbeat {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #334155;
+    margin-left: 8px;
+    vertical-align: middle;
+    transition: background-color 0.1s ease, transform 0.1s ease;
+}
+
+.heartbeat.active {
+    background-color: #22c55e;
+    transform: scale(1.6);
+}
+.dashboard-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #1e293b;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.subtitle {
+    margin: 0.25rem 0 0 0;
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.connection-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.connection-badge .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.connection-badge.connected {
+    background-color: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border: 1px solid #22c55e;
+}
+
+.connection-badge.connected .dot {
+    background-color: #22c55e;
+}
+
+.connection-badge.disconnected {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+.connection-badge.disconnected .dot {
+    background-color: #ef4444;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.card {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.card h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+.card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+/* --- Table with visible grid lines --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.data-table td {
+    padding: 0.75rem 1rem;
+    border: 1px solid #334155;
+    font-size: 0.9rem;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #24324a;
+}
+
+.metric-label {
+    color: #94a3b8;
+    width: 45%;
+}
+
+.metric-value {
+    text-align: right;
+}
+
+.result-table {
+    margin-top: 1.25rem;
+}
+
+.waiting {
+    color: #64748b;
+    font-style: italic;
+}
+
+/* --- Bright status chips --- */
+.chip {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.chip-blue {
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+.chip-purple {
+    background-color: #7c3aed;
+    color: #ffffff;
+}
+
+.chip-green {
+    background-color: #16a34a;
+    color: #ffffff;
+}
+
+.chip-red {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+.chip-gray {
+    background-color: #475569;
+    color: #e2e8f0;
+}
+
+.chip-idle {
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+.chip-exposing {
+    background-color: #d97706;
+    color: #ffffff;
+}
+
+.chip-fault {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+.state-idle {
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+.state-moving,
+.state-capturing {
+    background-color: #d97706;
+    color: #ffffff;
+}
+
+.state-fault {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+/* --- Buttons --- */
+.btn-primary,
+.btn-secondary {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    margin-bottom: 0.75rem;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #0369a1;
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #94a3b8;
+    border: 1px solid #334155;
+}
+
+.btn-secondary:hover {
+    color: #e2e8f0;
+    border-color: #94a3b8;
+}

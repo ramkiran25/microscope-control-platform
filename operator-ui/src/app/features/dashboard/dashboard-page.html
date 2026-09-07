@@ -1,0 +1,113 @@
+<div class="dashboard-container">
+
+    <div class="dashboard-header">
+        <div>
+            <h1>Microscope Control</h1>
+            <p class="subtitle">Live instrument status &amp; acquisition
+                control</p>
+        </div>
+        <div class="connection-badge" [class.connected]="isConnected"
+            [class.disconnected]="!isConnected">
+            <span class="dot"></span>
+            {{ isConnected ? 'Live' : 'Reconnecting…' }}
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <!-- LEFT: Live status -->
+        <div class="card">
+            <div class="card-header-row">
+                <h2>
+                    Instrument Status
+                    <span class="heartbeat" [class.active]="justPulsed"></span>
+                </h2>
+                @if (telemetry) {
+                <span class="chip" [ngClass]="stateClass">{{
+                    telemetry.instrumentState }}</span>
+                }
+            </div>
+
+            @if (telemetry) {
+            <table class="data-table">
+                <tbody>
+                    <tr>
+                        <td class="metric-label">Position (x, y, z)</td>
+                        <td class="metric-value">
+                            <span class="chip chip-blue">
+                                {{ telemetry.position.x }}, {{
+                                telemetry.position.y }}, {{ telemetry.position.z
+                                }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="metric-label">Camera state</td>
+                        <td class="metric-value">
+                            <span class="chip"
+                                [ngClass]="'chip-' + telemetry.cameraState.toLowerCase()">
+                                {{ telemetry.cameraState }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="metric-label">Last frame</td>
+                        <td class="metric-value">
+                            <span class="chip chip-purple">{{
+                                telemetry.lastFrameId ?? '—' }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            } @else {
+            <p class="waiting">Waiting for telemetry…</p>
+            }
+        </div>
+
+        <!-- RIGHT: Controls -->
+        <div class="card">
+            <h2>Acquisition Control</h2>
+
+            <button class="btn-primary" (click)="runZStack()"
+                [disabled]="isRunning">
+                {{ isRunning ? 'Running…' : 'Run Z-Stack' }}
+            </button>
+
+            <button class="btn-secondary" (click)="toggleContinuous()">
+                {{ isContinuousRunning ? 'Stop Live Demo' : 'Start Live Demo' }}
+            </button>
+
+            <button class="btn-secondary" (click)="resetInstrument()">
+                Reset
+            </button>
+
+            <table class="data-table result-table">
+                <tbody>
+                    <tr>
+                        <td class="metric-label">Last action</td>
+                        <td class="metric-value">
+                            @if (lastActionMessage) {
+                            <span class="chip"
+                                [ngClass]="lastActionWasError ? 'chip-red' : 'chip-green'">
+                                {{ lastActionMessage }}
+                            </span>
+                            } @else {
+                            <span class="chip chip-gray">no runs yet</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="metric-label">Connection</td>
+                        <td class="metric-value">
+                            <span class="chip"
+                                [ngClass]="isConnected ? 'chip-green' : 'chip-red'">
+                                {{ isConnected ? 'connected' : 'disconnected' }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

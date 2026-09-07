@@ -8,7 +8,7 @@ import com.microscope.control.dto.TelemetryUpdate;
 
 @Component
 public class TelemetryPublisher {
-  private final List<Consumer<TelemetryUpdate>> subscribers = new CopyOnWriteArrayList();
+  private final List<Consumer<TelemetryUpdate>> subscribers = new CopyOnWriteArrayList<>();
   
   public void subscribe(Consumer<TelemetryUpdate> subscriber) {
       subscribers.add(subscriber);

@@ -30,4 +30,4 @@ def simulate_move(current: dict, target_x: float, target_y: float, target_z: flo
         time.sleep(duration / 2)
         raise StageStallError("Simulated stage stall during move")
 
-    time.sleep(duration)
+    #time.sleep(duration)
