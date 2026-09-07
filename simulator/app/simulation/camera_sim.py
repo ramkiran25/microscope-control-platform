@@ -4,7 +4,7 @@ occasionally faults, mirroring a real camera's sensor readout errors.
 """
 
 import random
-import time
+import asyncio
 
 FAULT_PROBABILITY = 0.02
 
@@ -13,9 +13,15 @@ class CameraFaultError(Exception):
     """Raised to simulate a sensor/readout fault during exposure."""
 
 
-def simulate_capture(exposure_ms: int) -> None:
+async def simulate_capture(exposure_ms: int) -> None:
+    # Convert exposure from milliseconds to seconds
+    exposure_sec = exposure_ms / 1000.0
+
+    # Simulate fault condition
     if random.random() < FAULT_PROBABILITY:
-        time.sleep((exposure_ms / 1000.0) / 2)
+        # Partial readout delay before faulting
+        await asyncio.sleep(exposure_sec / 2.0)
         raise CameraFaultError("Simulated camera readout fault")
 
-    time.sleep(exposure_ms / 1000.0)
+    # Complete exposure duration without blocking the event loop
+    await asyncio.sleep(exposure_sec)

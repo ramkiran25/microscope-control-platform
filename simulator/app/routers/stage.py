@@ -21,7 +21,7 @@ def move_stage(request: MoveRequest) -> None:
     current = simulator_state.get_position()
 
     try:
-        simulate_move(current, request.x, request.y, request.z)
+        simulate_move(current, request.x, request.y, request.z) # type: ignore
     except StageStallError as e:
         raise HTTPException(status_code=503, detail=str(e))
 
