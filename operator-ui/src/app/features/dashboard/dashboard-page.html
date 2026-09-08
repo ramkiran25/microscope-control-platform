@@ -1,21 +1,33 @@
 <div class="dashboard-container">
 
+    <!-- HEADER -->
     <div class="dashboard-header">
         <div>
             <h1>Microscope Control</h1>
             <p class="subtitle">Live instrument status &amp; acquisition
                 control</p>
         </div>
-        <div class="connection-badge" [class.connected]="isConnected"
-            [class.disconnected]="!isConnected">
-            <span class="dot"></span>
-            {{ isConnected ? 'Live' : 'Reconnecting…' }}
+
+        <div class="header-actions">
+            <!-- Analytics Modal Trigger Button -->
+            <button class="btn-secondary analytics-btn"
+                (click)="openAnalyticsModal()">
+                <span class="icon">📊</span> System Metrics
+            </button>
+
+            <!-- Connection Badge -->
+            <div class="connection-badge" [class.connected]="isConnected"
+                [class.disconnected]="!isConnected">
+                <span class="dot"></span>
+                {{ isConnected ? 'Live' : 'Reconnecting…' }}
+            </div>
         </div>
     </div>
 
+    <!-- MAIN GRID -->
     <div class="dashboard-grid">
 
-        <!-- LEFT: Live status -->
+        <!-- LEFT CARD: Live Status -->
         <div class="card">
             <div class="card-header-row">
                 <h2>
@@ -23,8 +35,9 @@
                     <span class="heartbeat" [class.active]="justPulsed"></span>
                 </h2>
                 @if (telemetry) {
-                <span class="chip" [ngClass]="stateClass">{{
-                    telemetry.instrumentState }}</span>
+                <span class="chip" [ngClass]="stateClass">
+                    {{ telemetry.instrumentState }}
+                </span>
                 }
             </div>
 
@@ -53,8 +66,19 @@
                     <tr>
                         <td class="metric-label">Last frame</td>
                         <td class="metric-value">
-                            <span class="chip chip-purple">{{
-                                telemetry.lastFrameId ?? '—' }}</span>
+                            <span class="chip chip-purple">
+                                {{ telemetry.lastFrameId ?? '—' }}
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- Telemetry Exception/Fault Gauge -->
+                    <tr>
+                        <td class="metric-label">State Faults</td>
+                        <td class="metric-value">
+                            <span class="chip"
+                                [ngClass]="stateFaults > 0 ? 'chip-red' : 'chip-green'">
+                                {{ stateFaults ?? 0 }}
+                            </span>
                         </td>
                     </tr>
                 </tbody>
@@ -64,7 +88,7 @@
             }
         </div>
 
-        <!-- RIGHT: Controls -->
+        <!-- RIGHT CARD: Controls -->
         <div class="card">
             <h2>Acquisition Control</h2>
 
@@ -102,6 +126,17 @@
                             }
                         </td>
                     </tr>
+                    <!-- Sequence Duration Timer Metric -->
+                    <tr>
+                        <td class="metric-label">Avg Sequence Duration</td>
+                        <td class="metric-value">
+                            <span class="chip chip-blue">
+                                {{ sequenceAvgExecutionTime ?
+                                (sequenceAvgExecutionTime | number:'1.2-2') +
+                                's' : '—' }}
+                            </span>
+                        </td>
+                    </tr>
                     <tr>
                         <td class="metric-label">Connection</td>
                         <td class="metric-value">
@@ -117,3 +152,61 @@
 
     </div>
 </div>
+
+<!-- INFRASTRUCTURE ANALYTICS MODAL -->
+@if (showAnalyticsModal) {
+<div class="modal-backdrop" (click)="closeAnalyticsModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+            <h3>Backend Diagnostics & Infrastructure</h3>
+            <button class="close-btn"
+                (click)="closeAnalyticsModal()">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <table class="data-table">
+                <tbody>
+                    <tr>
+                        <td class="metric-label">HikariCP DB Connections</td>
+                        <td class="metric-value">
+                            <span class="chip chip-blue">
+                                {{ dbActiveConnections ?? 0 }} / {{
+                                dbMaxConnections ?? 10 }} Active
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="metric-label">JVM Process Uptime</td>
+                        <td class="metric-value">
+                            <span class="chip chip-gray">
+                                {{ processUptimeSeconds ? (processUptimeSeconds
+                                | number:'1.0-0') + 's' : '—' }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="metric-label">System CPU Usage</td>
+                        <td class="metric-value">
+                            <span class="chip chip-purple">
+                                {{ processCpuUsage ? (processCpuUsage |
+                                percent:'1.1-1') : '—' }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="metric-label">Transition Exceptions</td>
+                        <td class="metric-value">
+                            <span class="chip"
+                                [ngClass]="transitionExceptions > 0 ? 'chip-red' : 'chip-green'">
+                                {{ transitionExceptions ?? 0 }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+}

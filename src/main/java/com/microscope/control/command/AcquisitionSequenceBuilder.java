@@ -5,27 +5,29 @@ import java.util.Collections;
 import java.util.List;
 import com.microscope.control.driver.CameraDriver;
 import com.microscope.control.driver.StageDriver;
+import io.micrometer.core.instrument.MeterRegistry;
 
 
 public class AcquisitionSequenceBuilder {
   private final StageDriver stageDriver;
   private final CameraDriver cameraDriver;
+  private final MeterRegistry registry;
   List<Command> commands = new ArrayList<>();
 
-  public AcquisitionSequenceBuilder(StageDriver stageDriver, CameraDriver cameraDriver) {
+  public AcquisitionSequenceBuilder(StageDriver stageDriver, CameraDriver cameraDriver,MeterRegistry registry) {
     this.stageDriver = stageDriver;
     this.cameraDriver = cameraDriver;
-
+    this.registry = registry;
   }
 
   public AcquisitionSequenceBuilder moveTo(double x, double y, double z) {
-    commands.add(new MoveCommand(stageDriver, x, y, z));
+    commands.add(new MoveCommand(stageDriver, x, y, z,registry));
     return this;
   }
 
   public AcquisitionSequenceBuilder capture(long exposureMs) {
     // CaptureCommand
-    commands.add(new CaptureCommand(cameraDriver, exposureMs));
+    commands.add(new CaptureCommand(cameraDriver, exposureMs,registry));
     return this;
   }
 

@@ -1,22 +1,29 @@
 # Microscope Control Platform
 
-A simulated instrument-control system for a microscope, built to explore
-the kind of software an imaging/instrumentation team actually needs:
-real-time hardware orchestration, safety interlocks, and live telemetry.
+A simulated instrument-control system for a microscope, built to explore the kind of software an imaging/instrumentation team actually needs: real-time hardware orchestration, safety interlocks, and live telemetry.
 
-
-The project deliberately mirrors a real microscopy acquisition workflow
-(move the stage, expose the camera, repeat) using a simulated "hardware"
-layer instead of physical instruments, so the full software stack can be
-built, tested, and demonstrated without lab equipment.
+The project deliberately mirrors a real microscopy acquisition workflow (move the stage, expose the camera, repeat) using a simulated "hardware" layer instead of physical instruments, so the full software stack can be built, tested, and demonstrated without lab equipment.
 
 ## Dashboard Preview
 
 <div align="center">
-  <img src="assets/microscope-image.png" style="max-width:100%; height:auto;" alt="Architecture Diagram" />
- </div>
+  <img src="assets/microscope-image.png" style="max-width:100%; height:auto;" alt="Microscope Control Dashboard" />
+  <br /><br />
+  <img src="assets/system-metrics.png" style="max-width:100%; height:auto;" alt="System Diagnostics & Infrastructure Metrics" />
+</div>
 
-## Architecture
+## System Metrics & Diagnostics
+
+To ensure operational reliability and high availability during intensive imaging acquisition runs, the `control-service` collects and exposes real-time backend infrastructure telemetry.
+
+### Key Metrics Monitored
+
+* **HikariCP DB Connection Pool**: Tracks active vs. total connections allocated for acquisition metadata persistence, preventing connection leaks during rapid telemetry streaming.
+* **JVM Process Uptime**: Monitors runtime longevity and lifecycle events to help detect unexpected restarts or memory recovery issues.
+* **System CPU Usage**: Tracks real-time CPU consumption across thread pools executing asynchronous command blocks and WebSocket push broadcasts.
+* **State & Transition Faults**: Monitors frequency of caught safety interlock violations, simulator hardware stalls, and camera exposure failures.
+
+### Telemetry & Diagnostics Architecture
 
 Three independent services, each with its own language and
 responsibility:

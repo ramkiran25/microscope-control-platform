@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe, NgClass, PercentPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { TelemetryService } from '../../core/service/TelemetryService';
@@ -9,7 +9,7 @@ import { TelemetryUpdate } from '../../core/models/models';
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgClass, DecimalPipe, PercentPipe],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
 })
@@ -20,7 +20,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   isRunning = false;
   lastActionMessage = '';
   lastActionWasError = false;
-
+  stateFaults: number = 0;
   private telemetrySub?: Subscription;
   private connectionSub?: Subscription;
 
@@ -98,5 +98,21 @@ export class DashboardPage implements OnInit, OnDestroy {
         this.lastActionWasError = true;
       },
     });
+  }
+  // --- NEW PROPERTIES FOR METRICS ---
+  showAnalyticsModal = false;
+  sequenceAvgExecutionTime = 12.27;
+  dbActiveConnections = 0;
+  dbMaxConnections = 10;
+  processUptimeSeconds = 49.4;
+  processCpuUsage = 0.177; // 17.7%
+  transitionExceptions = 0;
+  // --- MODAL CONTROLS ---
+  openAnalyticsModal() {
+    this.showAnalyticsModal = true;
+  }
+
+  closeAnalyticsModal() {
+    this.showAnalyticsModal = false;
   }
 }

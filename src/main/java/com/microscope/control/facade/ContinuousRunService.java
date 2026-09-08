@@ -12,6 +12,7 @@ import com.microscope.control.driver.StageDriver;
 import com.microscope.control.exception.DriverCommunicationException;
 import com.microscope.control.state.InstrumentState;
 import com.microscope.control.state.StateMachine;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,14 +23,16 @@ public class ContinuousRunService {
   private final CameraDriver cameraDriver;
   private final StateMachine stateMachine;
   private final ExecutorService executor = Executors.newSingleThreadExecutor();
+  private final MeterRegistry registry;
 
   private volatile boolean running = false;
 
   public ContinuousRunService(StageDriver stageDriver, CameraDriver cameraDriver,
-      StateMachine stateMachine) {
+      StateMachine stateMachine,MeterRegistry registry) {
     this.stageDriver = stageDriver;
     this.cameraDriver = cameraDriver;
     this.stateMachine = stateMachine;
+    this.registry = registry;
   }
 
   public synchronized void start() {
@@ -56,7 +59,7 @@ public class ContinuousRunService {
 
     while (running) {
       try {
-        List<Command> sequence = new AcquisitionSequenceBuilder(stageDriver, cameraDriver)
+        List<Command> sequence = new AcquisitionSequenceBuilder(stageDriver, cameraDriver,registry)
             .moveTo(0, 0, z).capture(150).build();
 
         for (Command command : sequence) {
