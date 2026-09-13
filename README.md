@@ -9,9 +9,7 @@ The project deliberately mirrors a real microscopy acquisition workflow (move th
 <div align="center">
 
   <img src="assets/microscope-image.png" style="max-width:100%; height:auto;" alt="Microscope Control Dashboard" />
-
-  <br /><br />
- <img src="assets/system-metrics.png" style="max-width:100%; height:auto;" alt="System Diagnostics & Infrastructure Metrics" />
+  br /><br />
 </div>
 
 ## System Metrics & Diagnostics
@@ -27,6 +25,11 @@ To ensure operational reliability and high availability during intensive imaging
 * **System CPU Usage**: Tracks real-time CPU consumption across thread pools executing asynchronous command blocks and WebSocket push broadcasts.
 
 * **State & Transition Faults**: Monitors frequency of caught safety interlock violations, simulator hardware stalls, and camera exposure failures.
+
+<div align="center">
+ <img src="assets/system-metrics.png" style="max-width:100%; height:auto;" alt="System Diagnostics & Infrastructure Metrics" />
+  <br /><br />
+</div>
 
 ### Telemetry & Diagnostics Architecture
 
