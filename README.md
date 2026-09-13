@@ -9,7 +9,7 @@ The project deliberately mirrors a real microscopy acquisition workflow (move th
 <div align="center">
 
   <img src="assets/microscope-image.png" style="max-width:100%; height:auto;" alt="Microscope Control Dashboard" />
-  br /><br />
+  <br /><br />
 </div>
 
 ## System Metrics & Diagnostics
