@@ -118,24 +118,18 @@ Current capabilities include:
 - Displaying current instrument status
 - Engineering diagnostics
 
-Both the Angular application and the PySide6 desktop console communicate with the same Spring Boot control service.
+Both the Angular application and the PySide6 desktop console communicate with the same Spring Boot control service — as independent clients, not chained through one another.
 
 ```text
-Angular Operator UI
-        |
-        | REST / WebSocket
-        |
-PySide6 Engineering Console
-        |
-        | REST
-        v
-Spring Boot Control Service
-        |
-        v
-Driver Adapters
-        |
-        v
-FastAPI Hardware Simulator
+Angular Operator UI  ---REST / WebSocket---\
+                                             \
+                                              >--->  Spring Boot Control Service
+                                             /              |
+PySide6 Engineering Console  ---REST-------/               v
+                                                    Driver Adapters
+                                                             |
+                                                             v
+                                                    FastAPI Hardware Simulator
 ```
 
 This demonstrates that the acquisition and instrument-control logic is independent of the presentation technology.
